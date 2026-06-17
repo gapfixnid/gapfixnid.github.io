@@ -2,6 +2,28 @@
   const story = window.UNNAMED_STORY;
 
   story.events.act3_001.choices = [{ label: "다음", next: "act3_001a" }];
+  story.events.act3_002.choices = [
+    {
+      label: "심문관에게 검은 열쇠를 빼앗는다",
+      effects: { stats: { wound: 1, doubt: 1 }, clues: ["inquisitor_key"], flags: ["defied_inquisitor"] },
+      next: "act3_003",
+      conditionNext: [
+        { if: { statAtLeast: { wound: 3 } }, next: "ending_void_death" },
+        { next: "act3_003" }
+      ]
+    },
+    {
+      label: "침묵 사제에게 쪽지를 보인다",
+      requires: { clues: ["silence_vow"] },
+      effects: { stats: { memory: 1 }, flags: ["spared_priest"] },
+      next: "act3_003"
+    },
+    {
+      label: "두 사람 모두 같은 봉인을 지킨다고 말한다",
+      effects: { stats: { memory: 1, doubt: 1 }, clues: ["twin_seal"] },
+      next: "act3_003"
+    }
+  ];
   story.events.act3_003.choices = [{ label: "다음", next: "act3_003a" }];
   story.events.act3_004.choices = [
     {
@@ -497,6 +519,23 @@
         "정산은 심판보다 어려울 것이다. 심판은 죄인을 가리키면 시작되지만, 정산은 자신이 서 있던 자리까지 함께 보아야 시작되기 때문이다."
       ],
       choices: [{ label: "다음", next: "act4_001" }]
+    },
+    ending_void_death: {
+      chapter: "조기 종료",
+      location: "최초의 성채 입구",
+      title: "영원한 표류",
+      text: [
+        "두 진영의 경비인 천사 심문관의 경고를 무시하고 억지로 문을 뜯어내려 무력을 행사하려 했다. 그러나 이미 전장에서 깊어진 상처와 피로로 가득 찬 네 몸뚱아리는 심문관과 침묵 사제의 매서운 협공을 감당해 낼 리 없었다.",
+        "네 손이 검은 열쇠에 닿는 순간, 최초의 성채가 가진 고대 방어 봉인 시스템이 폭주했다. 눈을 멀게 할 만큼 강력한 흰빛과 심연의 거대하고 차가운 칠흑 같은 어둠이 뒤엉키며 거대한 마력 폭발을 일으켰다.",
+        "차원과 차원의 틈새를 잇는 경계가 찢어지고, 너는 거대한 진공 상태의 보이드 균열 속으로 빨려 들어갔다. 시간도, 중력도, 소리마저 존재하지 않는 공백의 허공을 떠돌며, 너는 레오의 차갑게 부서진 등불을 꼭 껴안은 채 차원의 미아가 되어 영원히 우주를 떠돌게 되었다."
+      ],
+      ending: true,
+      choices: [
+        {
+          label: "처음부터 다시 시작한다",
+          action: "restart"
+        }
+      ]
     }
   });
 })();
