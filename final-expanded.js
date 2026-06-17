@@ -102,7 +102,61 @@
     "그래도 선택해야 했다. 이름이 붙을 것을 알면서도. 왜곡될 것을 알면서도. 후세가 네 뜻과 다르게 기억할 것을 알면서도. 선택은 완전한 통제를 약속하지 않는다. 다만 지금 이 순간, 네가 무엇을 더 이상 반복하지 않을지 정하는 일이다."
   ];
 
+  story.events.final_002.choices = [
+    {
+      label: "진실을 묻고 질서를 유지한다",
+      effects: { flags: ["chose_order"] },
+      next: "ending_order_full"
+    },
+    {
+      label: "모든 체계를 붕괴시킨다",
+      effects: { flags: ["chose_ruin"] },
+      next: "ending_ruin"
+    },
+    {
+      label: "모든 사실을 폭로한다",
+      effects: { flags: ["chose_truth"] },
+      next: "final_truth_unravel",
+      conditionNext: [
+        { if: { statAtLeast: { memory: 9 }, clues: ["first_fortress_record", "barkas_last_words"] }, next: "ending_truth" },
+        { next: "final_truth_unravel" }
+      ]
+    },
+    {
+      label: "왕좌를 거부하고 목격자로 남는다",
+      requires: { clues: ["leo_broken_lantern", "barkas_last_words", "orden_confession", "first_fortress_record"] },
+      effects: { flags: ["rejected_throne"] },
+      next: "final_true_unready",
+      conditionNext: [
+        { if: { statAtLeast: { memory: 10, doubt: 8 } }, next: "ending_true" },
+        { next: "final_true_unready" }
+      ]
+    }
+  ];
+
   Object.assign(story.events, {
+    final_truth_unravel: {
+      chapter: "최종 구역",
+      location: "원초의 정원",
+      title: "모자란 증거",
+      text: [
+        "너는 모든 기록을 열기로 했다. 하지만 손안의 진실은 아직 서로를 충분히 붙잡고 있지 못했다. 몇몇 기록은 맥락 없이 광장으로 흩어졌고, 몇몇 증언은 이름 없는 분노의 입에 먼저 닿았다.",
+        "천계는 불리한 문장들을 악마의 조작이라 불렀고, 심연은 바르카스의 경고를 빼고 복수의 문장만 크게 읽었다. 사람들은 진실을 들었지만, 아직 그 진실을 함께 견딜 언어를 갖지 못했다.",
+        "폭로는 칼이 되었다. 네 의도는 전쟁의 장치를 멈추는 것이었지만, 모자란 증거와 서두른 말은 장치의 벽을 부수기보다 폭발시켰다. 원초의 잔재는 웃지 않았다. 그럴 필요가 없었다. 세계가 이미 스스로 무너지고 있었으니까."
+      ],
+      choices: [{ label: "다음", next: "ending_ruin" }]
+    },
+    final_true_unready: {
+      chapter: "최종 구역",
+      location: "원초의 정원",
+      title: "견디지 못한 빈자리",
+      text: [
+        "너는 왕좌를 거부하려 했다. 레오의 등불을 들어 올리고, 누구도 한 사람의 이름 아래 숨지 말아야 한다고 말했다. 하지만 네가 모은 기억은 아직 너무 적었고, 의심은 아직 충분히 깊지 않았다. 빈 왕좌를 견디려면 단순한 거절보다 더 많은 증언이 필요했다.",
+        "사람들은 네 침묵보다 네가 열어 놓은 기록을 먼저 붙잡았다. 누군가는 너를 목격자라 부르기보다 폭로자라 불렀고, 누군가는 빈 왕좌 앞에서 다시 중심을 찾으려 했다. 너는 앉지 않았지만, 세계는 아직 앉지 않는 법을 배우지 못했다.",
+        "그래도 거절은 완전히 사라지지 않았다. 그것은 폭로의 가장자리에서 작은 주석처럼 남았다. 지금은 모든 기록을 여는 일이 먼저였고, 빈 왕좌를 견디는 일은 그다음 세대가 다시 배워야 할 질문이 되었다."
+      ],
+      choices: [{ label: "다음", next: "ending_truth" }]
+    },
     ending_order_full: {
       chapter: "엔딩",
       location: "성천궁",
