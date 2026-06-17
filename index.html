@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>무명: 이름 없는 병사</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="scene">
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+          <div class="start-content">
+            <p class="start-eyebrow">인터랙티브 텍스트 RPG</p>
+            <h1 class="start-title">무명</h1>
+            <p class="start-subtitle">이름 없는 병사</p>
+            <div class="start-actions">
+              <button class="menu-button" id="startGameButton">게임 시작</button>
+              <button class="menu-button secondary" id="startLoadButton">불러오기</button>
+            </div>
+          </div>
+        </div>
+
+        <span id="chapterLabel" style="display: none;"></span>
+        <section class="story-panel" id="storyPanel" style="display: none;">
+          <div class="stats-bar">
+            <div class="stats-left">
+              <span class="stat-badge" data-stat="faith">신앙 <b id="stat-faith">0</b></span>
+              <span class="stat-badge" data-stat="doubt">의심 <b id="stat-doubt">0</b></span>
+              <span class="stat-badge" data-stat="wound">상처 <b id="stat-wound">0</b></span>
+              <span class="stat-badge" data-stat="memory">기억 <b id="stat-memory">0</b></span>
+            </div>
+            <div class="stats-right">
+              <button class="icon-button mini" id="loadButton" title="불러오기" aria-label="불러오기">
+                <span aria-hidden="true">↺</span>
+              </button>
+              <button class="icon-button danger mini" id="resetButton" title="처음부터" aria-label="처음부터">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+          </div>
+          <div class="clues-bar" id="cluesBar">
+            <span class="clues-label">발견된 단서:</span>
+            <span id="cluesList"></span>
+          </div>
+          <p class="location" id="locationText">백은 요새</p>
+          <h2 id="eventTitle">백은 요새의 새벽</h2>
+          <div class="story-text" id="storyText"></div>
+          <div class="choices" id="choices"></div>
+        </section>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./story.js"></script>
+    <script src="./act2.js"></script>
+    <script src="./final-acts.js"></script>
+    <script src="./act3-expanded.js"></script>
+    <script src="./act4-expanded.js"></script>
+    <script src="./final-expanded.js"></script>
+    <script src="./game.js"></script>
+  </body>
+</html>
