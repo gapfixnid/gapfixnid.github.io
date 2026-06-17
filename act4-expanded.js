@@ -10,7 +10,7 @@
     },
     {
       label: "그에게 책임을 묻는다",
-      effects: { stats: { doubt: 1 }, flags: ["defied_inquisitor"] },
+      effects: { stats: { doubt: 1 }, clues: ["orden_confession"], flags: ["defied_inquisitor"] },
       next: "act4_002a"
     }
   ];
@@ -22,7 +22,7 @@
     },
     {
       label: "그의 죽음을 심연에 알리겠다고 한다",
-      effects: { stats: { doubt: 1 }, flags: ["barkas_fell"] },
+      effects: { stats: { doubt: 1 }, clues: ["barkas_last_words"], flags: ["barkas_fell"] },
       next: "act4_003a"
     }
   ];
@@ -102,7 +102,7 @@
         },
         {
           label: "그에게 무거운 책임을 묻는다",
-          effects: { stats: { doubt: 1 }, flags: ["defied_inquisitor"] },
+          effects: { stats: { doubt: 1 }, clues: ["orden_confession"], flags: ["defied_inquisitor"] },
           next: "act4_002a"
         }
       ]
@@ -124,7 +124,7 @@
         },
         {
           label: "신앙을 무너뜨린 그에게 책임을 묻는다",
-          effects: { stats: { doubt: 1 }, flags: ["defied_inquisitor"] },
+          effects: { stats: { doubt: 1 }, clues: ["orden_confession"], flags: ["defied_inquisitor"] },
           next: "act4_002a"
         }
       ]
@@ -266,6 +266,22 @@
       choices: [
         {
           label: "다음",
+          next: "act4_002l"
+        }
+      ]
+    },
+    act4_002l: {
+      chapter: "4막 정산",
+      location: "성천궁 아래 균열",
+      title: "아래에서 올라온 명령",
+      text: [
+        "균열 아래로 내려갈수록 성천궁의 흰 소리는 멀어지고, 심연의 쇳소리가 가까워졌다. 검은 사슬 사이로 찢어진 명령문들이 떠올랐다. 심연어로 적힌 문장들이었다. 바르카스 장군, 왕좌 명령 불복. 침묵 사제단 접촉 의혹. 원족 기록 유출 방조. 필요 시 즉결 처분.",
+        "그 명령문 가장자리에는 천계식 인장 조각도 함께 눌려 있었다. 천계는 그가 너무 오래 살아 있었다고 판단했고, 심연은 그가 너무 많이 말하기 시작했다고 판단했다. 서로 적인 두 권력이 같은 결론에 도착한 셈이었다. 바르카스는 이제 어느 쪽에도 편리하지 않았다.",
+        "아래쪽에서 짧은 전투의 소리가 들렸다가 끊겼다. 함성도 승전가도 없었다. 누군가를 처단할 때보다, 기록에서 지울 때 나는 소리에 가까웠다. 너는 그제야 깨달았다. 심연의 왕좌에서 너를 기다리는 것은 장군이 아니라, 자기 왕좌에 의해 폐위된 사람일 것이다."
+      ],
+      choices: [
+        {
+          label: "다음",
           conditionNext: [
             { if: { statAtLeast: { doubt: 5 } }, next: "act4_003_doubt" },
             { if: { statAtLeast: { faith: 5 } }, next: "act4_003_faith" },
@@ -291,7 +307,7 @@
         },
         {
           label: "그의 죽음을 심연에 알리겠다고 한다",
-          effects: { stats: { doubt: 1 }, flags: ["barkas_fell"] },
+          effects: { stats: { doubt: 1 }, clues: ["barkas_last_words"], flags: ["barkas_fell"] },
           next: "act4_003a"
         }
       ]
@@ -313,7 +329,7 @@
         },
         {
           label: "그의 죽음을 심연에 알리겠다고 한다",
-          effects: { stats: { doubt: 1 }, flags: ["barkas_fell"] },
+          effects: { stats: { doubt: 1 }, clues: ["barkas_last_words"], flags: ["barkas_fell"] },
           next: "act4_003a"
         }
       ]

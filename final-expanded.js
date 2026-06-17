@@ -128,7 +128,7 @@
       effects: { flags: ["rejected_throne"] },
       next: "final_true_unready",
       conditionNext: [
-        { if: { statAtLeast: { memory: 10, doubt: 8 } }, next: "ending_true" },
+        { if: { statAtLeast: { memory: 9, doubt: 8 } }, next: "ending_true" },
         { next: "final_true_unready" }
       ]
     }
