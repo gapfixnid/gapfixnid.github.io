@@ -3,7 +3,6 @@
 
   Object.assign(story.clueNames, {
     ash_compass: "재 속의 나침반",
-    inverted_capital: "거꾸로 매달린 수도",
     gray_prayer: "잿빛 기도문",
     primal_statue: "원족 석상",
     barkas_wound: "바르카스의 오래된 상처",
@@ -23,8 +22,7 @@
     listened_barkas: "바르카스의 말을 들음",
     helped_demon_child: "악마 아이를 도움",
     monastery_mark: "검은 수도원의 표식",
-    refused_demon_history: "악마의 역사도 의심함",
-    carried_lantern_down: "등불을 아래로 가져감"
+    refused_demon_history: "악마의 역사도 의심함"
   });
 
   story.events.ending_fall.ending = false;

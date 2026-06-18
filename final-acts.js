@@ -7,16 +7,13 @@
     twin_seal: "쌍둥이 봉인",
     leo_broken_lantern: "레오의 부서진 등불",
     barkas_last_words: "바르카스의 마지막 말",
-    primal_garden_seed: "원초의 정원 씨앗",
-    orden_confession: "오르덴의 고백",
-    vestige_core: "원초의 잔재 핵"
+    orden_confession: "오르덴의 고백"
   });
 
   Object.assign(story.flagNames, {
     defied_inquisitor: "심문관에게 맞섬",
     spared_priest: "침묵 사제를 살림",
     leo_reached: "레오에게 닿음",
-    leo_lost: "레오를 잃음",
     barkas_fell: "바르카스의 최후를 봄",
     rejected_throne: "왕좌를 거부함",
     chose_order: "질서를 선택함",

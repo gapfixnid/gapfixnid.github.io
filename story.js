@@ -27,7 +27,8 @@ window.UNNAMED_STORY = {
     library_mark: "봉인 도서관의 낙인",
     prayed_with_company: "중대와 함께 기도함",
     heard_enemy_words: "적의 말을 들음",
-    touched_mural: "벽화에 손댐"
+    touched_mural: "벽화에 손댐",
+    shared_mural_with_leo: "레오와 벽화를 공유함"
   },
   events: {
     act1_001: {

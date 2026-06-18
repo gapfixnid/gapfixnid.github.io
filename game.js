@@ -202,7 +202,7 @@
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
       showToast("저장된 진행이 없습니다.");
-      return;
+      return false;
     }
 
     try {
@@ -215,8 +215,10 @@
       };
       showToast("진행을 불러왔습니다.");
       render();
+      return true;
     } catch {
       showToast("저장 데이터를 읽지 못했습니다.");
+      return false;
     }
   }
 
@@ -282,9 +284,10 @@
   });
 
   els.startLoad.addEventListener("click", () => {
-    load();
-    els.startScreen.style.display = "none";
-    els.storyPanel.style.display = "flex";
+    if (load()) {
+      els.startScreen.style.display = "none";
+      els.storyPanel.style.display = "flex";
+    }
   });
 
   initStartScreen();
