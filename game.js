@@ -1,4 +1,4 @@
-import { STORY_DATA } from "./story-data.js?v=20260618";
+import { STORY_DATA } from "./story-data.js?v=20260619";
 
 const STORAGE_KEY = "unnamed-full-save";
 const LEGACY_STORAGE_KEYS = ["unnamed-act1-save"];
@@ -12,10 +12,13 @@ const els = {
   title: document.getElementById("eventTitle"),
   story: document.getElementById("storyText"),
   choices: document.getElementById("choices"),
-  save: document.getElementById("saveButton"),
   load: document.getElementById("loadButton"),
   reset: document.getElementById("resetButton"),
   toast: document.getElementById("toast"),
+  startScreen: document.getElementById("startScreen"),
+  storyPanel: document.getElementById("storyPanel"),
+  startGame: document.getElementById("startGameButton"),
+  startLoad: document.getElementById("startLoadButton"),
   dialog: document.getElementById("confirmDialog"),
   dialogTitle: document.getElementById("confirmTitle"),
   dialogMessage: document.getElementById("confirmMessage"),
@@ -42,6 +45,19 @@ function clampStats() {
   }
 }
 
+function showStartScreen() {
+  const hasSave = Boolean(findSavedState());
+  els.startLoad.disabled = !hasSave;
+  els.startLoad.textContent = hasSave ? "불러오기" : "불러올 데이터가 없습니다";
+  els.startScreen.hidden = false;
+  els.storyPanel.hidden = true;
+}
+
+function showStoryPanel() {
+  els.startScreen.hidden = true;
+  els.storyPanel.hidden = false;
+}
+
 function render() {
   clampStats();
   const event = data.events[state.eventId];
@@ -54,6 +70,7 @@ function render() {
   els.location.textContent = event.location;
   els.title.textContent = event.title;
   els.story.innerHTML = event.text.map((line) => `<p>${escapeHtml(line)}</p>`).join("");
+  els.story.scrollTop = 0;
   renderChoices(event);
 }
 
@@ -87,6 +104,7 @@ function choose(choice) {
   if (choice.action === "restart") {
     state = freshState();
     saveState({ silent: true });
+    showStoryPanel();
     showToast("처음으로 돌아왔습니다.");
     render();
     return;
@@ -94,7 +112,12 @@ function choose(choice) {
 
   applyEffects(choice.effects);
   state.eventId = resolveNext(choice);
-  saveState({ silent: true });
+
+  if (choice.label !== "다음") {
+    saveState({ silent: true });
+    showToast("자동 저장되었습니다.", 1000);
+  }
+
   render();
 }
 
@@ -233,19 +256,42 @@ function restoreSavedState(saved, { silent = false } = {}) {
     clampStats();
     saveState({ silent: true });
     if (!silent) showToast("진행을 불러왔습니다.");
+    showStoryPanel();
     render();
     return true;
   } catch {
     clearSavedState();
     if (!silent) showToast("저장 데이터를 읽지 못했습니다.");
+    showStartScreen();
     return false;
   }
+}
+
+async function requestStartGame() {
+  if (findSavedState()) {
+    const shouldStart = await openDialog({
+      title: "새로 시작",
+      message: "기존 저장 데이터가 존재합니다. 새로 시작하면 기존 데이터가 삭제됩니다.",
+      confirmText: "새로 시작",
+      cancelText: "취소",
+      danger: true
+    });
+
+    if (!shouldStart) return;
+  }
+
+  clearSavedState();
+  state = freshState();
+  saveState({ silent: true });
+  showStoryPanel();
+  render();
 }
 
 async function requestLoad() {
   const saved = findSavedState();
   if (!saved) {
     showToast("저장된 진행이 없습니다.");
+    showStartScreen();
     return;
   }
 
@@ -272,7 +318,7 @@ async function requestReset() {
   state = freshState();
   clearSavedState();
   showToast("저장된 진행을 지웠습니다.");
-  render();
+  showStartScreen();
 }
 
 function openDialog({ title, message, confirmText = "확인", cancelText = "취소", danger = false }) {
@@ -299,11 +345,11 @@ function closeDialog(result) {
   resolve(result);
 }
 
-function showToast(message) {
+function showToast(message, duration = 1600) {
   clearTimeout(toastTimer);
   els.toast.textContent = message;
   els.toast.classList.add("show");
-  toastTimer = setTimeout(() => els.toast.classList.remove("show"), 1600);
+  toastTimer = setTimeout(() => els.toast.classList.remove("show"), duration);
 }
 
 function escapeHtml(value) {
@@ -315,30 +361,8 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-async function init() {
-  render();
-  const saved = findSavedState();
-  if (!saved) return;
-
-  const shouldLoad = await openDialog({
-    title: "저장 데이터 발견",
-    message: "기존 저장 데이터가 존재합니다. 이어서 진행하시겠습니까?",
-    confirmText: "이어하기",
-    cancelText: "새로 시작"
-  });
-
-  if (shouldLoad) {
-    restoreSavedState(saved);
-  } else {
-    clearSavedState();
-    state = freshState();
-    render();
-  }
-}
-
-els.save.addEventListener("click", () => {
-  if (saveState()) showToast("저장했습니다.");
-});
+els.startGame.addEventListener("click", requestStartGame);
+els.startLoad.addEventListener("click", () => restoreSavedState(findSavedState()));
 els.load.addEventListener("click", requestLoad);
 els.reset.addEventListener("click", requestReset);
 els.dialogOk.addEventListener("click", () => closeDialog(true));
@@ -350,4 +374,4 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !els.dialog.hidden) closeDialog(false);
 });
 
-init();
+showStartScreen();

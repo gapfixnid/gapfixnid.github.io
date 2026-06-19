@@ -9,25 +9,34 @@
   <body>
     <main class="shell">
       <section class="scene">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow" id="chapterLabel">1막 천계</p>
-            <h1>무명</h1>
+        <div class="start-screen" id="startScreen">
+          <div class="start-content">
+            <p class="start-eyebrow">인터랙티브 텍스트 RPG</p>
+            <h1 class="start-title">무명</h1>
+            <p class="start-subtitle">이름 없는 병사</p>
+            <div class="start-actions">
+              <button class="menu-button" id="startGameButton" type="button">게임 시작</button>
+              <button class="menu-button secondary" id="startLoadButton" type="button">불러오기</button>
+            </div>
           </div>
-          <div class="top-actions">
-            <button class="icon-button" id="saveButton" title="저장" aria-label="저장">
-              <span aria-hidden="true">▣</span>
-            </button>
-            <button class="icon-button" id="loadButton" title="불러오기" aria-label="불러오기">
-              <span aria-hidden="true">↺</span>
-            </button>
-            <button class="icon-button danger" id="resetButton" title="처음부터" aria-label="처음부터">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-        </header>
+        </div>
 
-        <section class="story-panel">
+        <section class="story-panel" id="storyPanel" hidden>
+          <header class="topbar">
+            <div>
+              <p class="eyebrow" id="chapterLabel">1막 천계</p>
+              <h1>무명</h1>
+            </div>
+            <div class="top-actions">
+              <button class="icon-button" id="loadButton" title="불러오기" aria-label="불러오기" type="button">
+                <span aria-hidden="true">↺</span>
+              </button>
+              <button class="icon-button danger" id="resetButton" title="처음부터" aria-label="처음부터" type="button">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+          </header>
+
           <p class="location" id="locationText">백은 요새</p>
           <h2 id="eventTitle">백은 요새의 새벽</h2>
           <div class="story-text" id="storyText"></div>
@@ -48,6 +57,6 @@
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./game.js?v=20260618"></script>
+    <script type="module" src="./game.js?v=20260619"></script>
   </body>
 </html>
