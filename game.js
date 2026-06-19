@@ -20,11 +20,17 @@
     startScreen: document.getElementById("startScreen"),
     storyPanel: document.getElementById("storyPanel"),
     startGame: document.getElementById("startGameButton"),
-    startLoad: document.getElementById("startLoadButton")
+    startLoad: document.getElementById("startLoadButton"),
+    dialog: document.getElementById("confirmDialog"),
+    dialogTitle: document.getElementById("confirmTitle"),
+    dialogMessage: document.getElementById("confirmMessage"),
+    dialogCancel: document.getElementById("confirmCancel"),
+    dialogOk: document.getElementById("confirmOk")
   };
 
   let state = freshState();
   let toastTimer = null;
+  let pendingDialog = null;
 
   function freshState() {
     return {
@@ -244,6 +250,38 @@
     initStartScreen();
   }
 
+  function openDialog({ title, message, confirmText = "확인", cancelText = "취소", danger = false }) {
+    if (pendingDialog) closeDialog(false);
+
+    els.dialogTitle.textContent = title;
+    els.dialogMessage.textContent = message;
+    els.dialogOk.textContent = confirmText;
+    els.dialogCancel.textContent = cancelText;
+    els.dialogOk.classList.toggle("danger", danger);
+    els.dialog.hidden = false;
+
+    return new Promise((resolve) => {
+      pendingDialog = {
+        resolve,
+        previousFocus: document.activeElement
+      };
+      els.dialogCancel.focus();
+    });
+  }
+
+  function closeDialog(result) {
+    if (!pendingDialog) return;
+    const { resolve, previousFocus } = pendingDialog;
+    pendingDialog = null;
+    els.dialog.hidden = true;
+
+    if (previousFocus && typeof previousFocus.focus === "function") {
+      previousFocus.focus();
+    }
+
+    resolve(result);
+  }
+
   function showToast(message, duration = 1600) {
     clearTimeout(toastTimer);
     els.toast.textContent = message;
@@ -260,20 +298,44 @@
       .replaceAll("'", "&#039;");
   }
 
-  els.load.addEventListener("click", () => {
-    const proceed = confirm("마지막 저장 지점(최근 분기 선택지)으로 되돌아가시겠습니까?");
+  els.load.addEventListener("click", async () => {
+    if (!localStorage.getItem(STORAGE_KEY)) {
+      showToast("저장된 진행이 없습니다.");
+      return;
+    }
+
+    const proceed = await openDialog({
+      title: "저장 지점으로 돌아가기",
+      message: "현재 화면의 진행은 마지막 저장 지점으로 되돌아갑니다.",
+      confirmText: "불러오기",
+      cancelText: "취소"
+    });
+
     if (proceed) load();
   });
 
-  els.reset.addEventListener("click", () => {
-    const proceed = confirm("현재까지의 진행 상황과 저장 데이터가 모두 삭제됩니다. 정말 처음부터 다시 시작하시겠습니까?");
+  els.reset.addEventListener("click", async () => {
+    const proceed = await openDialog({
+      title: "처음부터 시작",
+      message: "현재까지의 진행 상황과 저장 데이터가 모두 삭제됩니다.",
+      confirmText: "삭제",
+      cancelText: "취소",
+      danger: true
+    });
+
     if (proceed) reset();
   });
 
-  els.startGame.addEventListener("click", () => {
+  els.startGame.addEventListener("click", async () => {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      const proceed = confirm("이미 기존 저장 데이터가 존재합니다. 새로 시작하면 기존 데이터는 삭제됩니다. 정말 새로 시작하시겠습니까?");
+      const proceed = await openDialog({
+        title: "새 게임 시작",
+        message: "이미 기존 저장 데이터가 존재합니다. 새로 시작하면 기존 데이터가 삭제됩니다.",
+        confirmText: "새로 시작",
+        cancelText: "취소",
+        danger: true
+      });
       if (!proceed) return;
     }
     state = freshState();
@@ -288,6 +350,15 @@
       els.startScreen.style.display = "none";
       els.storyPanel.style.display = "flex";
     }
+  });
+
+  els.dialogOk.addEventListener("click", () => closeDialog(true));
+  els.dialogCancel.addEventListener("click", () => closeDialog(false));
+  els.dialog.addEventListener("click", (event) => {
+    if (event.target === els.dialog) closeDialog(false);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !els.dialog.hidden) closeDialog(false);
   });
 
   initStartScreen();

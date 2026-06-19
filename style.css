@@ -315,6 +315,116 @@ h2 {
   transform: translate(-50%, 0);
 }
 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(212, 184, 107, 0.12), transparent 22rem),
+    rgba(3, 4, 7, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.modal-backdrop[hidden] {
+  display: none;
+}
+
+.confirm-box {
+  width: min(430px, 100%);
+  padding: 24px;
+  color: var(--ink);
+  background: linear-gradient(180deg, rgba(21, 24, 30, 0.98), rgba(8, 9, 12, 0.98));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  animation: confirmIn 180ms ease-out both;
+}
+
+.confirm-eyebrow {
+  margin: 0 0 8px;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.confirm-box h2 {
+  margin: 0;
+  max-width: none;
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.confirm-box p {
+  word-break: keep-all;
+}
+
+#confirmMessage {
+  margin: 14px 0 22px;
+  color: #ddd8cc;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.dialog-button {
+  min-width: 88px;
+  min-height: 42px;
+  padding: 10px 14px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.dialog-button:hover,
+.dialog-button:focus-visible {
+  border-color: var(--gold);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.dialog-button.primary {
+  background: rgba(212, 184, 107, 0.18);
+}
+
+.dialog-button.primary:hover,
+.dialog-button.primary:focus-visible {
+  background: rgba(212, 184, 107, 0.26);
+}
+
+.dialog-button.danger {
+  background: rgba(184, 74, 74, 0.2);
+  border-color: rgba(184, 74, 74, 0.55);
+}
+
+.dialog-button.danger:hover,
+.dialog-button.danger:focus-visible {
+  background: rgba(184, 74, 74, 0.28);
+  border-color: var(--red);
+}
+
+@keyframes confirmIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @media (max-width: 840px) {
   .shell {
     width: min(100vw - 18px, 720px);

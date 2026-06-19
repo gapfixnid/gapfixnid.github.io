@@ -52,6 +52,18 @@
       </section>
     </main>
 
+    <div class="modal-backdrop" id="confirmDialog" hidden>
+      <section class="confirm-box" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+        <p class="confirm-eyebrow">확인</p>
+        <h2 id="confirmTitle">확인</h2>
+        <p id="confirmMessage"></p>
+        <div class="dialog-actions">
+          <button class="dialog-button secondary" id="confirmCancel" type="button">취소</button>
+          <button class="dialog-button primary" id="confirmOk" type="button">확인</button>
+        </div>
+      </section>
+    </div>
+
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="./story.js"></script>
     <script src="./act2.js"></script>
