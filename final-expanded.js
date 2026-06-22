@@ -1,6 +1,14 @@
 (function () {
   const story = window.UNNAMED_STORY;
 
+  // Register Final Flags
+  Object.assign(story.flagNames, {
+    rejected_throne: "왕좌를 거부함",
+    chose_order: "질서를 선택함",
+    chose_ruin: "파괴를 선택함",
+    chose_truth: "진실을 선택함"
+  });
+
   story.events.final_001 = {
     chapter: "최종 구역",
     location: "원초의 정원",
@@ -95,46 +103,54 @@
     }
   });
 
-  story.events.final_002.text = [
-    "왕좌는 비어 있었다. 잔재는 기다렸다. 세계 역시 기다렸다. 천계는 흔들렸고, 심연은 갈라졌고, 잃어버린 하늘에는 아직 레오가 남아 있었다. 너는 모든 것을 끝낼 수 없었다. 어떤 선택도 모두를 구하지 못한다.",
-    "하지만 선택하지 않는 것도 선택이었다. 침묵은 이미 질서의 편이었고, 분노는 이미 복수의 편이었다. 너는 손안의 등불을 보았다. 작은 불꽃은 답을 주지 않았다. 다만 네가 어떤 답을 고르든, 그 답이 얼굴을 지우지 않도록 비추고 있었다.",
-    "너는 저울 앞으로 걸어갔다. 원초의 잔재가 낮게 웃었다. ‘이제 너도 이야기가 된다.’ 그 말이 가장 두려웠다. 장치는 너를 마지막까지 이용하려 했다. 영웅, 파괴자, 폭로자, 목격자. 어떤 이름도 안전하지 않았다.",
-    "그래도 선택해야 했다. 이름이 붙을 것을 알면서도. 왜곡될 것을 알면서도. 후세가 네 뜻과 다르게 기억할 것을 알면서도. 선택은 완전한 통제를 약속하지 않는다. 다만 지금 이 순간, 네가 무엇을 더 이상 반복하지 않을지 정하는 일이다."
-  ];
-
-  story.events.final_002.choices = [
-    {
-      label: "진실을 묻고 질서를 유지한다",
-      effects: { flags: ["chose_order"] },
-      next: "ending_order_full"
-    },
-    {
-      label: "모든 체계를 붕괴시킨다",
-      effects: { flags: ["chose_ruin"] },
-      next: "ending_ruin"
-    },
-    {
-      label: "모든 사실을 폭로한다",
-      effects: { flags: ["chose_truth"] },
-      next: "final_truth_unravel",
-      conditionNext: [
-        { if: { statAtLeast: { memory: 9 }, clues: ["first_fortress_record", "barkas_last_words"] }, next: "ending_truth" },
-        { next: "final_truth_unravel" }
-      ]
-    },
-    {
-      label: "왕좌를 거부하고 목격자로 남는다",
-      requires: { clues: ["leo_broken_lantern", "barkas_last_words", "orden_confession", "first_fortress_record"] },
-      effects: { flags: ["rejected_throne"] },
-      next: "final_true_unready",
-      conditionNext: [
-        { if: { statAtLeast: { memory: 9, doubt: 8 } }, next: "ending_true" },
-        { next: "final_true_unready" }
-      ]
-    }
-  ];
-
   Object.assign(story.events, {
+    final_002: {
+      chapter: "최종 구역",
+      location: "원초의 정원",
+      title: "기억의 저울",
+      text: [
+        "왕좌는 비어 있었다. 잔재는 기다렸다. 세계 역시 기다렸다. 천계는 흔들렸고, 심연은 갈라졌고, 잃어버린 하늘에는 아직 레오가 남아 있었다. 너는 모든 것을 끝낼 수 없었다. 어떤 선택도 모두를 구하지 못한다.",
+        "하지만 선택하지 않는 것도 선택이었다. 침묵은 이미 질서의 편이었고, 분노는 이미 복수의 편이었다. 너는 손안의 등불을 보았다. 작은 불꽃은 답을 주지 않았다. 다만 네가 어떤 답을 고르든, 그 답이 얼굴을 지우지 않도록 비추고 있었다.",
+        "너는 저울 앞으로 걸어갔다. 원초의 잔재가 낮게 웃었다. ‘이제 너도 이야기가 된다.’ 그 말이 가장 두려웠다. 장치는 너를 마지막까지 이용하려 했다. 영웅, 파괴자, 폭로자, 목격자. 어떤 이름도 안전하지 않았다.",
+        "그래도 선택해야 했다. 이름이 붙을 것을 알면서도. 왜곡될 것을 알면서도. 후세가 네 뜻과 다르게 기억할 것을 알면서도. 선택은 완전한 통제를 약속하지 않는다. 다만 지금 이 순간, 네가 무엇을 더 이상 반복하지 않을지 정하는 일이다."
+      ],
+      choices: [
+        {
+          label: "진실을 묻고 질서를 유지한다",
+          effects: { flags: ["chose_order"] },
+          next: "ending_order_weak",
+          conditionNext: [
+            { if: { statAtLeast: { faith: 5 } }, next: "ending_order_full" },
+            { next: "ending_order_weak" }
+          ]
+        },
+        {
+          label: "모든 체계를 붕괴시킨다",
+          effects: { flags: ["chose_ruin"] },
+          next: "ending_ruin"
+        },
+        {
+          label: "모든 사실을 폭로한다",
+          effects: { flags: ["chose_truth"] },
+          next: "final_truth_unravel",
+          conditionNext: [
+            { if: { statAtLeast: { memory: 9 }, clues: ["first_fortress_record", "barkas_last_words"] }, next: "ending_truth" },
+            { if: { statAtLeast: { memory: 7 }, clues: ["first_fortress_record", "barkas_last_words"], flags: ["spared_priest"] }, next: "ending_truth" },
+            { next: "final_truth_unravel" }
+          ]
+        },
+        {
+          label: "왕좌를 거부하고 목격자로 남는다",
+          requires: { clues: ["leo_broken_lantern", "barkas_last_words", "orden_confession", "first_fortress_record"] },
+          effects: { flags: ["rejected_throne"] },
+          next: "final_true_unready",
+          conditionNext: [
+            { if: { statAtLeast: { memory: 9, doubt: 8 } }, next: "ending_true" },
+            { next: "final_true_unready" }
+          ]
+        }
+      ]
+    },
     final_truth_unravel: {
       chapter: "최종 구역",
       location: "원초의 정원",
@@ -216,6 +232,18 @@
         "시간이 흘렀다. 너의 행적은 점점 이야기로 바뀌었다. 어떤 기록은 너를 거짓을 끝낸 자라고 불렀고, 어떤 노래는 너를 마지막 목격자라고 불렀다. 그러나 가장 오래 살아남은 문장에는 이름이 없었다. ‘그는 보았고, 말했고, 앉지 않았다.’",
         "어느 먼 훗날, 성가대 아이였던 노인이 작은 등불을 들고 잃어버린 하늘의 학교를 찾았다. 칠판에는 아직 ‘함께’라는 단어가 상처 입은 채 남아 있었다. 노인은 그 아래에 새 문장을 적었다. ‘빈 왕좌를 견디는 법을 배우는 중.’",
         "그날 밤, 원초의 정원에서는 아무 명령도 내려오지 않았다. 다만 작은 불빛들이 서로에게 옮겨 붙었다. 하나가 꺼지면 다른 하나가 가까이 왔다. 세계는 구원받지 않았다. 그러나 더 이상 한 사람의 이름으로 구원받기를 기다리지도 않았다."
+      ],
+      ending: true,
+      choices: [{ label: "처음부터 다시 시작한다", action: "restart" }]
+    },
+    ending_order_weak: {
+      chapter: "엔딩",
+      location: "성천궁",
+      title: "불완전한 질서",
+      text: [
+        "너는 기록을 봉했다. 그러나 네 안의 신앙은 이미 무너진 뒤였고, 오르덴이 두려워했던 혼란을 막기 위해 억지로 질서를 선택했을 뿐이었다. 너는 오르덴의 고백을 숨겼고, 천계의 과오를 조작된 선전으로 덮으려 했다.",
+        "그러나 확신 없는 봉인은 쉽게 틈을 보였다. 성천궁의 사제들은 네 눈빛에서 의구심을 읽었고, 지워진 기록의 조각들은 군대 내 하급 병사들의 속삭임 속에서 유령처럼 떠돌았다. 너는 높은 자리에 앉았지만, 매일 아침 성벽 위에서 나팔이 울릴 때마다 네가 덮어둔 거짓의 무게에 짓눌렸다.",
+        "겉으로는 평화가 찾아온 것처럼 보였다. 그러나 그것은 썩어가는 상처 위에 덮인 얇은 대리석과 같았다. 레오의 등불은 네 집무실에서 매초 흔들리다 마침내 어둠 속으로 완전히 꺼져 버렸다. 너는 세계를 지키지도, 자신을 구하지도 못한 방관자가 되었다."
       ],
       ending: true,
       choices: [{ label: "처음부터 다시 시작한다", action: "restart" }]

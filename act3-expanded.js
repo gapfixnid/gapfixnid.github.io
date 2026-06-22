@@ -1,63 +1,160 @@
 (function () {
   const story = window.UNNAMED_STORY;
 
-  story.events.act3_001.choices = [{ label: "다음", next: "act3_001a" }];
-  story.events.act3_002.choices = [
-    {
-      label: "심문관에게 검은 열쇠를 빼앗는다",
-      effects: { stats: { wound: 1, doubt: 1 }, clues: ["inquisitor_key"], flags: ["defied_inquisitor"] },
-      next: "act3_002_key",
-      conditionNext: [
-        { if: { statAtLeast: { wound: 3 } }, next: "ending_void_death" },
-        { next: "act3_002_key" }
-      ]
-    },
-    {
-      label: "침묵 사제에게 쪽지를 보인다",
-      requires: { clues: ["silence_vow"] },
-      effects: { stats: { memory: 1 }, flags: ["spared_priest"] },
-      next: "act3_002_priest"
-    },
-    {
-      label: "두 사람 모두 같은 봉인을 지킨다고 말한다",
-      effects: { stats: { memory: 1, doubt: 1 }, clues: ["twin_seal"] },
-      next: "act3_002_seal"
-    }
+  // Register Act 3 Clues
+  Object.assign(story.clueNames, {
+    inquisitor_key: "심문관의 검은 열쇠",
+    first_fortress_record: "최초의 성채 기록",
+    twin_seal: "쌍둥이 봉인",
+    leo_broken_lantern: "레오의 부서진 등불"
+  });
+
+  // Register Act 3 Flags
+  Object.assign(story.flagNames, {
+    defied_inquisitor: "심문관에게 맞섬",
+    spared_priest: "침묵 사제를 살림",
+    leo_reached: "레오에게 닿음"
+  });
+
+  // Transition from Act 2
+  story.events.act2_complete.ending = false;
+  story.events.act2_complete.choices = [
+    { label: "3막으로 이어간다", next: "act3_001" },
+    { label: "처음부터 다시 시작한다", action: "restart" }
   ];
-  story.events.act3_003.choices = [{ label: "다음", next: "act3_003a" }];
-  story.events.act3_004.choices = [
-    {
-      label: "기록을 모두 챙긴다",
-      effects: { stats: { memory: 2 }, clues: ["first_fortress_record"] },
-      next: "act3_004a"
-    },
-    {
-      label: "전쟁 장치의 핵심만 기억한다",
-      effects: { stats: { memory: 1, doubt: 1 }, clues: ["first_fortress_record"] },
-      next: "act3_004a"
-    }
-  ];
-  story.events.act3_005.choices = [{ label: "다음", next: "act3_005a" }];
-  story.events.act3_006.choices = [
-    {
-      label: "레오를 끌어안는다",
-      effects: { stats: { memory: 1 }, clues: ["leo_broken_lantern"], flags: ["leo_reached"] },
-      next: "act3_006a"
-    },
-    {
-      label: "레오에게 진실을 말한다",
-      effects: { stats: { doubt: 1, memory: 1 }, clues: ["leo_broken_lantern"], flags: ["leo_reached"] },
-      next: "act3_006a"
-    },
-    {
-      label: "심문관의 흔적을 먼저 살핀다",
-      effects: { stats: { memory: 1 }, clues: ["inquisitor_key"], flags: ["leo_reached"] },
-      next: "act3_006a"
-    }
-  ];
-  story.events.act3_007.choices = [{ label: "다음", next: "act3_007a" }];
 
   Object.assign(story.events, {
+    act3_001: {
+      chapter: "3막 조작",
+      location: "최초의 성채",
+      title: "같은 문",
+      text: [
+        "최초의 성채는 천계와 심연의 경계에 박힌 검은 쐐기처럼 서 있었다. 위에서 내려온 흰 대리석과 아래에서 솟은 검은 돌이 서로를 밀어내듯 맞물려 있었다. 멀리서 보면 두 진영이 싸운 흔적 같았지만, 가까이서 보면 처음부터 함께 지어진 건물처럼 보였다.",
+        "성채 입구에는 두 문장이 나란히 새겨져 있었다. 천계어로는 ‘질서를 위해 봉한다.’ 악마어로는 ‘복수를 위해 침묵한다.’ 문장 아래에는 같은 문양이 있었다. 원족의 오래된 봉인. 양쪽이 서로 증오하면서도 같은 문을 지키고 있다는 침묵 사제의 쪽지는 거짓이 아니었다.",
+        "너는 부서진 창대를 쥐었다. 이제 창은 무기라기보다 걸음을 버티는 지팡이에 가까웠다. 하지만 여기까지 온 자에게 필요한 것은 날카로운 끝보다 버티는 손이었다."
+      ],
+      choices: [{ label: "다음", next: "act3_001a" }]
+    },
+    act3_002: {
+      chapter: "3막 조작",
+      location: "최초의 성채",
+      title: "심문관과 침묵 사제",
+      text: [
+        "문 앞에는 흰 가면의 천사 심문관과 검은 고리를 찬 침묵 사제가 함께 서 있었다. 그들은 서로를 보지 않았다. 마치 서로의 존재를 인정하는 순간 자신들의 교리가 무너진다는 듯이. 그러나 두 사람의 손은 같은 열쇠를 붙잡고 있었다.",
+        "심문관이 말했다. ‘너는 오염되었다.’ 침묵 사제는 말하지 않았지만, 목의 고리가 낮게 울렸다. 그 울림은 ‘너는 너무 많이 들었다’는 뜻처럼 들렸다.",
+        "너는 처음으로 양쪽의 언어를 동시에 이해했다. 그들이 지키는 것은 진영이 아니었다. 문이었다. 그리고 문 뒤에 있는 무언가가 천계와 심연 모두에게 위험했다."
+      ],
+      choices: [
+        {
+          label: "심문관에게 검은 열쇠를 빼앗는다",
+          effects: { stats: { wound: 1, doubt: 1 }, clues: ["inquisitor_key"], flags: ["defied_inquisitor"] },
+          next: "act3_002_key",
+          conditionNext: [
+            { if: { statAtLeast: { wound: 3 } }, next: "ending_void_death" },
+            { next: "act3_002_key" }
+          ]
+        },
+        {
+          label: "침묵 사제에게 쪽지를 보인다",
+          requires: { clues: ["silence_vow"] },
+          effects: { stats: { memory: 1 }, flags: ["spared_priest"] },
+          next: "act3_002_priest"
+        },
+        {
+          label: "두 사람 모두 같은 봉인을 지킨다고 말한다",
+          effects: { stats: { memory: 1, doubt: 1 }, clues: ["twin_seal"] },
+          next: "act3_002_seal"
+        }
+      ]
+    },
+    act3_003: {
+      chapter: "3막 조작",
+      location: "최초의 성채",
+      title: "봉인의 내부",
+      text: [
+        "문이 열리자 바람이 나오지 않았다. 대신 오래된 종이 냄새가 났다. 성채 안쪽은 감옥도, 무기고도 아니었다. 기록실이었다. 수천 년 동안 천계와 심연이 함께 감춘 문서들이 벽을 채우고 있었다. 어떤 문서는 천계의 인장으로 봉인되어 있었고, 어떤 문서는 악마 지도부의 피로 서명되어 있었다.",
+        "가장 오래된 기록에는 원족의 분열이 적혀 있었다. 보존파는 세계를 지키기 위해 변화를 금했고, 순환파는 세계를 살리기 위해 낡은 것을 태웠다. 둘 다 처음에는 구원을 말했지만, 끝에는 학살을 만들었다. 천사와 악마는 순수한 피해자가 아니었다. 둘 모두 실패한 신념의 후손이었다.",
+        "너는 기록의 마지막 장에서 더 끔찍한 문장을 발견했다. ‘전쟁은 봉인을 유지하는 가장 안정적인 장치다.’"
+      ],
+      choices: [{ label: "다음", next: "act3_003a" }]
+    },
+    act3_004: {
+      chapter: "3막 조작",
+      location: "최초의 성채",
+      title: "전쟁의 장치",
+      text: [
+        "기록은 설명했다. 원족의 학살 뒤, 남은 자들은 자신들의 죄를 감당할 수 없었다. 그래서 죄를 둘로 나누었다. 한쪽은 질서를 신성하게 만들었고, 다른 한쪽은 복수를 정당하게 만들었다. 양쪽의 지도부는 진실이 완전히 드러나는 순간 자기 진영의 존재 이유가 무너진다는 것을 알았다.",
+        "전쟁은 증오의 결과가 아니었다. 증오를 계속 생산하기 위한 장치였다. 천계는 악마의 잔혹함을 과장해 질서를 유지했고, 심연은 천계의 배신을 반복해 복수를 유지했다. 죽은 병사들은 양쪽의 신화를 새로 칠하는 안료가 되었다.",
+        "너는 백은 요새의 신병들을 떠올렸다. 망각의 도시의 아이를 떠올렸다. 그들은 장치의 부품이 아니었다. 그러나 장치는 늘 사람의 얼굴을 부품처럼 사용했다."
+      ],
+      choices: [
+        {
+          label: "기록을 모두 챙긴다",
+          effects: { stats: { memory: 2 }, clues: ["first_fortress_record"] },
+          next: "act3_004a"
+        },
+        {
+          label: "전쟁 장치의 핵심만 기억한다",
+          effects: { stats: { memory: 1, doubt: 1 }, clues: ["first_fortress_record"] },
+          next: "act3_004a"
+        },
+        {
+          label: "공통어를 이용해 기록의 핵심을 완벽히 번역한다",
+          requires: { clues: ["primal_word"] },
+          effects: { stats: { memory: 2, doubt: 1 }, clues: ["first_fortress_record"] },
+          next: "act3_004a"
+        }
+      ]
+    },
+    act3_005: {
+      chapter: "3막 조작",
+      location: "잃어버린 하늘",
+      title: "거꾸로 된 수도의 중심",
+      text: [
+        "성채의 뒷문은 잃어버린 하늘로 이어졌다. 그곳은 하늘도 땅도 아니었다. 천상의 수도가 거꾸로 매달린 채 심연의 어둠과 맞닿아 있었고, 거리마다 중력이 다른 방향으로 흐르고 있었다. 계단은 벽이 되었고, 광장은 천장이 되었으며, 성상들은 아래를 향해 기도하고 있었다.",
+        "환경 자체가 기록이었다. 부서진 집 안에는 천계식 찻잔과 악마식 장례 항아리가 함께 놓여 있었다. 광장 한쪽에는 아이들이 새긴 낙서가 남아 있었다. 날개와 뿔을 가진 작은 사람들. 그 아래에는 원족어로 ‘우리’라는 단어가 적혀 있었다.",
+        "너는 특별한 혈통도, 선택받은 열쇠도 아니었다. 그저 떨어졌고, 살아남았고, 보았을 뿐이다. 하지만 어쩌면 이곳에 필요한 것은 영웅이 아니라 목격자였다."
+      ],
+      choices: [{ label: "다음", next: "act3_005a" }]
+    },
+    act3_006: {
+      chapter: "3막 조작",
+      location: "잃어버린 하늘",
+      title: "부서진 등불",
+      text: [
+        "거꾸로 된 광장의 끝에서 작은 불빛이 보였다. 처음에는 착각이라고 생각했다. 하지만 불꽃은 너무 익숙한 방식으로 흔들렸다. 레오의 등불. 너는 달렸다. 길은 위아래를 바꾸며 네 다리를 흔들었지만, 너는 멈추지 않았다.",
+        "레오는 광장 중앙에 앉아 있었다. 갑옷은 심문관의 흰 끈으로 묶여 있었고, 등불은 반쯤 깨져 있었다. 그는 살아 있었지만, 눈빛은 멀리 가 있었다. ‘너 왔구나.’ 그가 말했다. ‘나중에 말해 준다더니, 진짜 나중이 됐네.’",
+        "웃어야 할 말이었지만, 아무도 웃지 못했다. 레오의 손에는 천계 심문관의 낙인이 남아 있었다. 그들은 그에게 네가 본 것을 물었고, 그가 모른다고 하자 모르는 이유를 고문했다."
+      ],
+      choices: [
+        {
+          label: "레오를 끌어안는다",
+          effects: { stats: { memory: 1 }, clues: ["leo_broken_lantern"], flags: ["leo_reached"] },
+          next: "act3_006a"
+        },
+        {
+          label: "레오에게 진실을 말한다",
+          effects: { stats: { doubt: 1, memory: 1 }, clues: ["leo_broken_lantern"], flags: ["leo_reached"] },
+          next: "act3_006a"
+        },
+        {
+          label: "심문관의 흔적을 먼저 살핀다",
+          effects: { stats: { memory: 1 }, clues: ["inquisitor_key"], flags: ["leo_reached"] },
+          next: "act3_006a"
+        }
+      ]
+    },
+    act3_007: {
+      chapter: "3막 조작",
+      location: "잃어버린 하늘",
+      title: "레오의 부탁",
+      text: [
+        "레오는 네 말을 끝까지 들었다. 천사와 악마가 원족의 실패에서 갈라졌다는 것, 전쟁이 봉인을 유지하는 장치라는 것, 양쪽 지도부가 진실을 나눠 감추고 있었다는 것. 그는 놀라지 않았다. 어쩌면 고문을 받는 동안 이미 더 잔혹한 가능성을 상상했을지도 모른다.",
+        "‘그럼 우린 뭐야?’ 그가 물었다. ‘속은 거야, 아니면 쓰인 거야?’",
+        "너는 대답하지 못했다. 레오는 깨진 등불을 네 손에 쥐여 주었다. ‘끝까지 가. 대신 네가 왕이 되지는 마. 모두가 진실을 들은 다음에도 누군가는 또 높은 자리에 앉고 싶어 할 거야. 그게 너면 안 돼.’"
+      ],
+      choices: [{ label: "다음", next: "act4_001" }]
+    },
     act3_001a: {
       chapter: "3막 조작",
       location: "최초의 성채",

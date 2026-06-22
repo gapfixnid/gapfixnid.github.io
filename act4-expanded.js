@@ -1,41 +1,73 @@
 (function () {
   const story = window.UNNAMED_STORY;
 
-  story.events.act4_001.choices = [{ label: "다음", next: "act4_001a" }];
-  story.events.act4_002.choices = [
-    {
-      label: "오르덴의 고백을 기록한다",
-      effects: { stats: { memory: 2 }, clues: ["orden_confession"] },
-      next: "act4_002a"
-    },
-    {
-      label: "그에게 책임을 묻는다",
-      effects: { stats: { doubt: 1 }, clues: ["orden_confession"], flags: ["defied_inquisitor"] },
-      next: "act4_002a"
-    }
-  ];
-  Object.assign(story.events.act4_003, {
-    title: "왕좌 문턱",
-    text: [
-      "성천궁 아래의 균열은 심연의 왕좌로 이어졌다. 계단 끝에는 찢긴 명령서와 검은 피가 뒤섞여 있었다. 바르카스의 이름은 명령서 위에서 여러 번 지워졌다가 다시 적힌 흔적을 남기고 있었다.",
-      "악마 지도부는 그가 너무 많은 것을 말했다고 판단했고, 천계는 그가 너무 오래 살아 있었다고 판단했다. 서로 적인 두 권력이 같은 결론에 도착했다는 사실이, 문 앞의 침묵을 더 무겁게 만들었다.",
-      "왕좌 안쪽에서 낮은 숨소리가 들렸다. 아직 끝나지 않은 말이 있었다."
-    ],
-    choices: [
-      {
-        label: "명령문의 흔적을 기록한다",
-        effects: { stats: { memory: 2 } },
-        next: "act4_003a"
-      },
-      {
-        label: "왕좌가 그를 버린 이유를 짚는다",
-        effects: { stats: { doubt: 1 } },
-        next: "act4_003a"
-      }
-    ]
+  // Register Act 4 Clues
+  Object.assign(story.clueNames, {
+    orden_confession: "오르덴의 고백",
+    barkas_last_words: "바르카스의 마지막 말"
+  });
+
+  // Register Act 4 Flags
+  Object.assign(story.flagNames, {
+    barkas_fell: "바르카스의 최후를 봄"
   });
 
   Object.assign(story.events, {
+    act4_001: {
+      chapter: "4막 정산",
+      location: "성천궁",
+      title: "천계 최심부",
+      text: [
+        "성천궁은 천계에서 가장 높은 곳에 있었다. 그러나 잃어버린 하늘을 지나 도착한 너에게 그 높이는 더 이상 신성하게 보이지 않았다. 성천궁의 흰 계단은 수많은 이름 없는 병사들의 뼈 위에 놓인 것처럼 보였다. 실제로 그런 것은 아니었다. 하지만 상징은 때로 사실보다 늦게, 더 깊이 사람을 찌른다.",
+        "궁의 문 앞에는 오르덴이 서 있었다. 그는 예전보다 늙어 보였다. 며칠 사이에 사람이 늙을 수는 없지만, 믿고 있던 문장이 무너질 때 사람은 시간보다 빨리 늙는다.",
+        "‘결국 여기까지 왔군.’ 그가 말했다. ‘나는 네가 심연에서 죽기를 바랐다. 그게 가장 자비로운 결말이라고 생각했다.’"
+      ],
+      choices: [{ label: "다음", next: "act4_001a" }]
+    },
+    act4_002: {
+      chapter: "4막 정산",
+      location: "성천궁",
+      title: "오르덴의 고백",
+      text: [
+        "오르덴은 검을 뽑지 않았다. 대신 오래된 기록 조각을 꺼냈다. 그것은 최초의 성채 기록과 같은 종이였다. ‘나는 오래전에 알았다. 천계가 완전히 깨끗하지 않다는 것, 악마가 완전히 거짓은 아니라는 것. 하지만 진실을 열면 전쟁이 끝날 거라고 믿지 않았다. 모두가 자기 상처를 들고 서로를 찢을 거라고 생각했다.’",
+        "그는 네 눈을 보았다. ‘그래서 늦췄다. 묻은 것이 아니라 늦춘 것이라고 스스로를 속였다. 하지만 늦추는 동안 아이들이 병사가 되었고, 병사들이 기록의 안료가 되었다.’",
+        "그의 고백은 용서가 아니었다. 변명도 아니었다. 너무 늦게 도착한 정확한 문장에 가까웠다."
+      ],
+      choices: [
+        {
+          label: "오르덴의 고백을 기록한다",
+          effects: { stats: { memory: 2 }, clues: ["orden_confession"] },
+          next: "act4_002a"
+        },
+        {
+          label: "그에게 책임을 묻는다",
+          effects: { stats: { doubt: 1 }, clues: ["orden_confession"], flags: ["defied_inquisitor"] },
+          next: "act4_002a"
+        }
+      ]
+    },
+    act4_003: {
+      chapter: "4막 정산",
+      location: "심연의 왕좌",
+      title: "왕좌 문턱",
+      text: [
+        "성천궁 아래의 균열은 심연의 왕좌로 이어졌다. 계단 끝에는 찢긴 명령서와 검은 피가 뒤섞여 있었다. 바르카스의 이름은 명령서 위에서 여러 번 지워졌다가 다시 적힌 흔적을 남기고 있었다.",
+        "악마 지도부는 그가 너무 많은 것을 말했다고 판단했고, 천계는 그가 너무 오래 살아 있었다고 판단했다. 서로 적인 두 권력이 같은 결론에 도착했다는 사실이, 문 앞의 침묵을 더 무겁게 만들었다.",
+        "왕좌 안쪽에서 낮은 숨소리가 들렸다. 아직 끝나지 않은 말이 있었다."
+      ],
+      choices: [
+        {
+          label: "명령문의 흔적을 기록한다",
+          effects: { stats: { memory: 2 } },
+          next: "act4_003a"
+        },
+        {
+          label: "왕좌가 그를 버린 이유를 짚는다",
+          effects: { stats: { doubt: 1 } },
+          next: "act4_003a"
+        }
+      ]
+    },
     act4_001a: {
       chapter: "4막 정산",
       location: "성천궁",
