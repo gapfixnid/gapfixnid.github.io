@@ -454,7 +454,9 @@
       
       // Determine label based on check availability
       if (choice.check) {
-        button.innerHTML = `<span>${choice.label}</span> <small style="color:var(--blue)">🎲 스탯 판정 필요</small>`;
+        const statVal = state.stats[choice.check.stat] || 0;
+        const targetDice = Math.max(2, 8 - statVal);
+        button.innerHTML = `<span>${choice.label}</span> <small style="color:var(--blue)">🎲 주사위 ${targetDice} 이상</small>`;
       } else {
         button.textContent = choice.label;
       }
@@ -491,7 +493,9 @@
 
     let checkSuccess = true;
     if (choice.check) {
-      checkSuccess = await runStatCheck(choice);
+      const result = await runStatCheck(choice);
+      if (result === null) return;
+      checkSuccess = result;
     }
 
     if (choice.check) {
@@ -519,15 +523,14 @@
     return new Promise((resolve) => {
       const check = choice.check;
       const statVal = state.stats[check.stat] || 0;
-      
-      // Formula: each point gives 8%, base 15% to 95% caps
-      const prob = Math.min(95, Math.max(15, 15 + statVal * 8));
+      const targetDice = Math.max(2, 8 - statVal);
       
       const checkModal = document.getElementById("checkModal");
       const checkDice = document.getElementById("checkDice");
       const checkDetail = document.getElementById("checkDetail");
       const checkResult = document.getElementById("checkResult");
       const checkProceed = document.getElementById("checkProceed");
+      const checkCancel = document.getElementById("checkCancel");
       const checkEyebrow = document.getElementById("checkEyebrow");
       const checkTitle = document.getElementById("checkTitle");
 
@@ -535,53 +538,65 @@
 
       checkEyebrow.textContent = `${statNames[check.stat] || check.stat} 판정`;
       checkTitle.textContent = choice.label;
-      checkDetail.innerHTML = `스탯: <b>${statNames[check.stat] || check.stat}</b> (수치: ${statVal})<br>판정 성공 확률: <b>${prob}%</b>`;
+      checkDetail.innerHTML = `스탯: <b>${statNames[check.stat] || check.stat}</b> (수치: ${statVal})<br>목표: <b>정팔면체 주사위 ${targetDice} 이상</b>`;
       
       checkResult.textContent = "";
       checkResult.className = "check-result-text";
-      checkDice.textContent = "?";
+      checkDice.innerHTML = "<span>?</span>";
       checkDice.className = "check-dice roll";
-      checkProceed.disabled = true;
+      checkProceed.disabled = false;
+      checkCancel.disabled = false;
 
       checkModal.hidden = false;
 
-      // Animate fake rolling for 1.2s
-      let rolls = 0;
-      const rollInterval = setInterval(() => {
-        checkDice.textContent = Math.floor(Math.random() * 100) + 1;
-        rolls++;
-        if (rolls > 7) {
-          clearInterval(rollInterval);
-          
-          const rollValue = Math.floor(Math.random() * 100) + 1;
-          const isSuccess = rollValue <= prob;
-          
-          checkDice.classList.remove("roll");
-          checkDice.textContent = rollValue;
+      const onCancel = () => {
+        checkModal.hidden = true;
+        checkCancel.removeEventListener("click", onCancel);
+        checkProceed.removeEventListener("click", onProceed);
+        resolve(null);
+      };
 
-          if (isSuccess) {
-            checkDice.classList.add("success");
-            checkResult.textContent = `성공! (주사위: ${rollValue} <= 확률: ${prob}%)`;
-            checkResult.classList.add("success");
-            AudioEngine.playSuccess();
-          } else {
-            checkDice.classList.add("failure");
-            checkResult.textContent = `실패 (주사위: ${rollValue} > 확률: ${prob}%)`;
-            checkResult.classList.add("failure");
-            AudioEngine.playError();
+      const onProceed = () => {
+        checkProceed.disabled = true;
+        checkCancel.disabled = true;
+        checkProceed.removeEventListener("click", onProceed);
+        checkCancel.removeEventListener("click", onCancel);
+        
+        let rolls = 0;
+        const rollInterval = setInterval(() => {
+          checkDice.innerHTML = `<span>${Math.floor(Math.random() * 8) + 1}</span>`;
+          rolls++;
+          if (rolls > 7) {
+            clearInterval(rollInterval);
+            
+            const rollValue = Math.floor(Math.random() * 8) + 1;
+            const isSuccess = rollValue >= targetDice;
+            
+            checkDice.classList.remove("roll");
+            checkDice.innerHTML = `<span>${rollValue}</span>`;
+
+            if (isSuccess) {
+              checkDice.classList.add("success");
+              checkResult.textContent = `성공! (결과: ${rollValue} >= 목표: ${targetDice})`;
+              checkResult.classList.add("success");
+              AudioEngine.playSuccess();
+            } else {
+              checkDice.classList.add("failure");
+              checkResult.textContent = `실패 (결과: ${rollValue} < 목표: ${targetDice})`;
+              checkResult.classList.add("failure");
+              AudioEngine.playError();
+            }
+            
+            setTimeout(() => {
+              checkModal.hidden = true;
+              resolve(isSuccess);
+            }, 1500);
           }
+        }, 140);
+      };
 
-          checkProceed.disabled = false;
-          
-          const onProceed = () => {
-            checkModal.hidden = true;
-            checkProceed.removeEventListener("click", onProceed);
-            resolve(isSuccess);
-          };
-          
-          checkProceed.onclick = onProceed;
-        }
-      }, 140);
+      checkProceed.addEventListener("click", onProceed);
+      checkCancel.addEventListener("click", onCancel);
     });
   }
 
