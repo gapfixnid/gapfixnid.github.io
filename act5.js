@@ -66,7 +66,7 @@
       text: [
         "원초의 잔재가 내뱉는 합리적인 악몽 앞에서도 네 신념은 꺾이지 않았다. 필요악이라는 변명은 결국 권력을 유지하기 위한 자기합리화일 뿐이다. 너는 거대한 시스템의 논리를 정면으로 거부하며 네 안의 중심을 확고히 다잡았다."
       ],
-      choices: [{ label: "다음", next: "final_001c" }]
+      choices: [{ label: "다음", next: "final_001b_ghost" }]
     },
     final_001b_fail: {
       chapter: "최종 구역",
@@ -75,7 +75,67 @@
       text: [
         "잔재의 말은 너무나도 무겁고 거대해서 네 내면의 방어를 무너뜨렸다. 어쩌면 그들의 말이 맞을지도 모른다는 절망감이 독처럼 퍼졌다. 시스템의 거대한 진실 앞에 네 정신은 큰 충격을 받고 상처를 입었다."
       ],
-      choices: [{ label: "다음", next: "final_001c" }]
+      choices: [{ label: "다음", next: "final_001b_ghost" }]
+    },
+    final_001b_ghost: {
+      chapter: "최종 구역",
+      location: "원초의 정원",
+      title: "잔재의 속삭임",
+      text: [
+        "잔재의 거대한 그림자가 굽어지며 네 귓가에 속삭였다. 그것은 그저 거대한 시스템이 아니라, 네가 가장 두려워하고 잃어버리고 싶지 않았던 과거를 정확히 찌르는 목소리였다."
+      ],
+      choices: [
+        {
+          label: "환영을 마주한다",
+          conditionNext: [
+            { if: { flags: ["past_hometown"] }, next: "final_past_hometown" },
+            { if: { flags: ["past_betrayal"] }, next: "final_past_betrayal" },
+            { if: { flags: ["past_family"] }, next: "final_past_family" },
+            { if: { flags: ["sacrificed_soldier"] }, next: "final_sacrificed" },
+            { next: "final_001c" }
+          ]
+        }
+      ]
+    },
+    final_past_hometown: {
+      chapter: "최종 구역",
+      location: "원초의 정원",
+      title: "불타버린 고향의 재",
+      text: [
+        "‘네가 맡았던 그 냄새를 기억하느냐.’ 잔재가 말했다. ‘불타버린 고향의 재 냄새. 질서가 없었기에 그런 비극이 생겼고, 복수라는 명분으로 그런 파괴가 정당화되었다. 우리는 그것을 막으려는 기어(Gear)일 뿐이다.’",
+        "네 폐부 깊숙이 그을린 나무와 타오르는 살점의 냄새가 훅 끼쳐왔다. 끔찍한 기억의 재현에 숨이 막혔다."
+      ],
+      choices: [{ label: "다음", conditionNext: [{ if: { flags: ["sacrificed_soldier"] }, next: "final_sacrificed" }, { next: "final_001c" }] }]
+    },
+    final_past_betrayal: {
+      chapter: "최종 구역",
+      location: "원초의 정원",
+      title: "지휘관의 웃음",
+      text: [
+        "‘네 지휘관이 널 사지로 몰아넣고 웃었을 때, 왜 그랬다고 생각하느냐.’ 잔재가 비웃듯 말했다. ‘인간은 원래 그런 존재다. 거대한 사슬로 묶어두지 않으면 서로를 짓밟고 일어설 뿐이지. 질서는 그들의 발목을 묶는 유일한 사슬이다.’",
+        "네 귓가에 과거 널 사지로 밀어넣던 혐오스러운 웃음소리가 울려퍼졌고, 억눌러왔던 증오심이 끓어올라 이성을 흐리게 만들었다."
+      ],
+      choices: [{ label: "다음", conditionNext: [{ if: { flags: ["sacrificed_soldier"] }, next: "final_sacrificed" }, { next: "final_001c" }] }]
+    },
+    final_past_family: {
+      chapter: "최종 구역",
+      location: "원초의 정원",
+      title: "동생의 차가운 손",
+      text: [
+        "‘네 동생의 그 작은 손이 식어가던 감촉을 잊었느냐.’ 잔재의 목소리는 너무나도 슬프게 들렸다. ‘완벽한 통제가 있었다면, 불필요한 전쟁이 없었다면 그 아이는 살았을 것이다. 완벽한 평화는 오직 절대적인 힘 아래에서만 가능하다.’",
+        "손바닥 끝에서 차갑게 굳어가던 체온이 다시 느껴졌다. 눈앞이 흐려지며 다리가 무너져 내리는 듯한 깊은 슬픔이 덮쳤다."
+      ],
+      choices: [{ label: "다음", conditionNext: [{ if: { flags: ["sacrificed_soldier"] }, next: "final_sacrificed" }, { next: "final_001c" }] }]
+    },
+    final_sacrificed: {
+      chapter: "최종 구역",
+      location: "원초의 정원",
+      title: "핏빛 업보",
+      text: [
+        "잔재의 얼굴 위로 기괴한 환영이 겹쳐졌다. 2막의 잿빛 협곡에서, 네가 살기 위해 괴물 쪽으로 억지로 밀쳐버렸던 그 이름 모를 신병의 얼굴이었다.",
+        "‘그리고 너는 어떠냐?’ 짓무른 얼굴의 환영이 피를 토하며 네게 말했다. ‘질서를 핑계로 가장 나약한 자를 버리고 도망친 네가 나를 거부할 자격이 있느냐?’ 그 비난은 뼛속까지 파고들어 네 의지력을 무참히 깎아내렸다."
+      ],
+      choices: [{ label: "버텨낸다", effects: { stats: { doubt: -1, faith: -1, wound: 1 } }, next: "final_001c" }]
     },
     final_001c: {
       chapter: "최종 구역",
