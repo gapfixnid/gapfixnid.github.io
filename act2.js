@@ -27,7 +27,7 @@
 
   story.events.ending_fall.ending = false;
   story.events.ending_fall.choices = [
-    { label: "2막으로 이어간다", next: "act2_001" },
+    { label: "막간으로 이어간다", next: "interlude_001" },
     { label: "처음부터 다시 시작한다", action: "restart" }
   ];
 
@@ -444,8 +444,19 @@
         "당당하게 외치려던 네 목소리는 바르카스의 그림자 안에서 떨림으로 바뀌었다. 그가 뿜어내는 수천 번의 학살의 기억이 환영처럼 네 머리를 강타했다. 너는 극심한 정신적 고통을 느끼며 비틀거렸고, 억지로 버티려다 내상까지 입었다."
       ],
       choices: [
-        { label: "다음", next: "act2_016", conditionNext: [{ if: { statAtLeast: { wound: 3 } }, next: "ending_barkas_death" }, { next: "act2_016" }] }
+        { label: "어떻게든 고통을 참고 버틴다", next: "act2_016", conditionNext: [{ if: { statAtLeast: { wound: 3 } }, next: "ending_barkas_death" }, { next: "act2_016" }] },
+        { label: "도망쳐온 다른 병사를 밀쳐 방패막이로 삼는다", effects: { flags: ["sacrificed_soldier"], stats: { wound: -1, doubt: 1 } }, next: "act2_016_sacrifice" }
       ]
+    },
+    act2_016_sacrifice: {
+      chapter: "2막 심연",
+      location: "망각의 도시",
+      title: "비참한 생존",
+      text: [
+        "네 손이 먼저 움직였다. 곁에서 떨고 있던 이름 없는 동기 병사의 어깨를 밀쳐 바르카스 쪽으로 억지로 넘어뜨렸다. 찰나의 틈이 생겼고, 네 몸을 짓누르던 살기가 잠시 분산되었다. 동기는 무어라 외칠 새도 없이 바르카스의 그림자에 덮여 비명조차 내지 못했다.",
+        "너는 가쁜 숨을 몰아쉬며 상처의 고통에서 벗어날 수 있었다. 그러나 이 비참하고 이기적인 선택의 감촉은 평생 네 손끝에 죄악처럼 남을 것이다."
+      ],
+      choices: [{ label: "다음", next: "act2_016" }]
     },
     act2_016: {
       chapter: "2막 심연",
