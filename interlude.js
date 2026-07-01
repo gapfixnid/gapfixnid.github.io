@@ -1,3 +1,5 @@
+const story = window.UNNAMED_STORY;
+
 const interlude_data = {
   interlude_001: {
     chapter: "막간",

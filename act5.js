@@ -90,9 +90,7 @@
           conditionNext: [
             { if: { flags: ["past_hometown"] }, next: "final_past_hometown" },
             { if: { flags: ["past_betrayal"] }, next: "final_past_betrayal" },
-            { if: { flags: ["past_family"] }, next: "final_past_family" },
-            { if: { flags: ["sacrificed_soldier"] }, next: "final_sacrificed" },
-            { next: "final_001c" }
+            { if: { flags: ["past_family"] }, next: "final_past_family" }
           ]
         }
       ]

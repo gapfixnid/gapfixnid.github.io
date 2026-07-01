@@ -72,7 +72,20 @@
         "피를 흘리면서도 너는 발악하듯 단검을 휘둘렀고, 운 좋게 그의 목을 베는 데 성공했다. 하지만 승리의 기쁨 대신 남은 것은 네 굳건했던 신앙에 금이 갔다는 섬뜩한 감각뿐이었다."
       ],
       choices: [
-        { label: "다음", next: "act4_alt_005", conditionNext: [{ if: { statAtLeast: { wound: 7 } }, next: "ending_void_death" }, { next: "act4_alt_005" }] }
+        { label: "다음", next: "act4_alt_005", conditionNext: [{ if: { statAtLeast: { wound: 7 } }, next: "ending_assassin_death" }, { next: "act4_alt_005" }] }
+      ]
+    },
+    ending_assassin_death: {
+      chapter: "조기 종료",
+      location: "심연의 제단",
+      title: "부러진 단검",
+      text: [
+        "바르카스의 목을 베기 직전, 네가 누적해 온 상처가 한계에 달했다. 네 손아귀에서 맹목의 단검이 미끄러졌고, 바르카스의 거대한 역공이 너를 집어삼켰다.",
+        "천계의 심문관으로서 모든 것을 버리고 광신의 길을 걸었으나, 결국 너는 심연의 차가운 바닥에서 아무에게도 기억되지 않는 비참한 최후를 맞이하고 말았다."
+      ],
+      ending: true,
+      choices: [
+        { label: "처음부터 다시 시작한다", action: "restart" }
       ]
     },
     act4_alt_005: {
