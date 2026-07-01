@@ -421,9 +421,9 @@
       currentCharIndex++;
 
       const pause =
-        /[.!?。！？]/.test(char) ? 180 :
-        /[,，、;]/.test(char) ? 90 :
-        28 + Math.random() * 38;
+        /[.!?。！？]/.test(char) ? 160 :
+        /[,，、;]/.test(char) ? 80 :
+        30 + Math.random() * 30;
 
       typingTimeout = setTimeout(typeChar, pause);
     }
