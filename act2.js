@@ -137,8 +137,17 @@
       choices: [
         {
           label: "기도문을 외운다",
-          effects: { stats: { memory: 1, doubt: 1 }, clues: ["gray_prayer", "shared_lament"] },
-          next: "act2_008"
+          check: {
+            stat: "memory",
+            success: {
+              effects: { stats: { memory: 1, doubt: 1 }, clues: ["gray_prayer", "shared_lament"] },
+              next: "act2_007a_success"
+            },
+            failure: {
+              effects: { stats: { doubt: 1 } },
+              next: "act2_007a_fail"
+            }
+          }
         },
         {
           label: "벽에서 손을 뗀다",
@@ -146,6 +155,24 @@
           next: "act2_008"
         }
       ]
+    },
+    act2_007a_success: {
+      chapter: "2막 심연",
+      location: "잿빛 협곡",
+      title: "선명해진 기도",
+      text: [
+        "너는 눈을 감고 희미해진 글자들을 머릿속에 필사적으로 되살렸다. 훈련받은 천계의 기억력이 이번에는 반역의 문장을 기억하는 데 쓰였다. ‘떨어진 자의 이름을 잃지 않게 하소서...’ 문장이 마음속에 완전히 자리 잡자, 단순한 저주가 아니라 깊은 애도라는 것을 알 수 있었다."
+      ],
+      choices: [{ label: "다음", next: "act2_008" }]
+    },
+    act2_007a_fail: {
+      chapter: "2막 심연",
+      location: "잿빛 협곡",
+      title: "흩어지는 글자",
+      text: [
+        "너는 글자를 외우려 했지만, 천계의 언어와 악마어가 기괴하게 뒤섞인 문장은 머릿속에서 계속 미끄러졌다. 억지로 기억을 쥐어짤수록 두통이 심해졌고, 결국 문장의 마지막 부분은 재가 되어 손가락 사이로 흩어지고 말았다."
+      ],
+      choices: [{ label: "다음", next: "act2_008" }]
     },
     act2_008: {
       chapter: "2막 심연",
@@ -373,12 +400,17 @@
       choices: [
         {
           label: "그를 악마 장군이라 부르며 맞선다",
-          effects: { stats: { faith: 1, wound: 1 }, flags: ["provoked_barkas"] },
-          next: "act2_016",
-          conditionNext: [
-            { if: { statAtLeast: { faith: 3 } }, next: "ending_barkas_death" },
-            { next: "act2_016" }
-          ]
+          check: {
+            stat: "faith",
+            success: {
+              effects: { stats: { faith: 1, wound: 1 }, flags: ["provoked_barkas"] },
+              next: "act2_015a_success"
+            },
+            failure: {
+              effects: { stats: { wound: 2 }, flags: ["provoked_barkas"] },
+              next: "act2_015a_fail"
+            }
+          }
         },
         {
           label: "그의 상처를 본다",
@@ -391,6 +423,28 @@
           effects: { stats: { memory: 1 }, flags: ["listened_barkas"] },
           next: "act2_016"
         }
+      ]
+    },
+    act2_015a_success: {
+      chapter: "2막 심연",
+      location: "망각의 도시",
+      title: "흔들리지 않는 눈빛",
+      text: [
+        "바르카스의 압도적인 살기 앞에서도 너는 무릎을 꿇지 않았다. ‘당신은 그저 악마 장군일 뿐이다.’ 천계의 규율이 방패가 되어 네 정신을 지켰다. 바르카스는 네 흔들림 없는 눈빛을 보고 흥미롭다는 듯 작게 콧방귀를 뀌었다. 하지만 그의 오라는 여전히 네 숨을 턱 막히게 했다."
+      ],
+      choices: [
+        { label: "다음", next: "act2_016", conditionNext: [{ if: { statAtLeast: { faith: 3 } }, next: "ending_barkas_death" }, { next: "act2_016" }] }
+      ]
+    },
+    act2_015a_fail: {
+      chapter: "2막 심연",
+      location: "망각의 도시",
+      title: "짓눌린 정신",
+      text: [
+        "당당하게 외치려던 네 목소리는 바르카스의 그림자 안에서 떨림으로 바뀌었다. 그가 뿜어내는 수천 번의 학살의 기억이 환영처럼 네 머리를 강타했다. 너는 극심한 정신적 고통을 느끼며 비틀거렸고, 억지로 버티려다 내상까지 입었다."
+      ],
+      choices: [
+        { label: "다음", next: "act2_016", conditionNext: [{ if: { statAtLeast: { wound: 3 } }, next: "ending_barkas_death" }, { next: "act2_016" }] }
       ]
     },
     act2_016: {

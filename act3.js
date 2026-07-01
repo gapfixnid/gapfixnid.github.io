@@ -47,12 +47,17 @@
       choices: [
         {
           label: "심문관에게 검은 열쇠를 빼앗는다",
-          effects: { stats: { wound: 1, doubt: 1 }, clues: ["inquisitor_key"], flags: ["defied_inquisitor"] },
-          next: "act3_002_key",
-          conditionNext: [
-            { if: { statAtLeast: { wound: 3 } }, next: "ending_void_death" },
-            { next: "act3_002_key" }
-          ]
+          check: {
+            stat: "wound",
+            success: {
+              effects: { stats: { doubt: 1 }, clues: ["inquisitor_key"], flags: ["defied_inquisitor"] },
+              next: "act3_002a_success"
+            },
+            failure: {
+              effects: { stats: { wound: 2 }, clues: ["inquisitor_key"], flags: ["defied_inquisitor"] },
+              next: "act3_002a_fail"
+            }
+          }
         },
         {
           label: "침묵 사제에게 쪽지를 보인다",
@@ -62,10 +67,57 @@
         },
         {
           label: "두 사람 모두 같은 봉인을 지킨다고 말한다",
-          effects: { stats: { memory: 1, doubt: 1 }, clues: ["twin_seal"] },
-          next: "act3_002_seal"
+          check: {
+            stat: "doubt",
+            success: {
+              effects: { stats: { memory: 1, doubt: 1 }, clues: ["twin_seal"] },
+              next: "act3_002b_success"
+            },
+            failure: {
+              effects: { stats: { wound: 1 } },
+              next: "act3_002b_fail"
+            }
+          }
         }
       ]
+    },
+    act3_002a_success: {
+      chapter: "3막 조작",
+      location: "최초의 성채",
+      title: "고통을 넘어서",
+      text: [
+        "심문관의 무기가 네 어깨를 찢고 들어왔지만, 너는 그 고통을 무시한 채 앞으로 쇄도했다. 고통은 몸을 망가뜨리지만 역설적으로 가장 선명한 감각을 주었다. 너는 피를 흘리면서도 그의 손에서 검은 열쇠를 강제로 비틀어 빼앗았다."
+      ],
+      choices: [{ label: "다음", next: "act3_002_key" }]
+    },
+    act3_002a_fail: {
+      chapter: "3막 조작",
+      location: "최초의 성채",
+      title: "잔혹한 역습",
+      text: [
+        "열쇠를 쥐려는 순간, 찢겨진 상처가 비명을 질렀다. 몸이 반사적으로 굳은 짧은 틈을 타 심문관이 네 복부를 강하게 걷어찼다. 넌 바닥에 나뒹굴며 치명적인 내상을 입었다. 그럼에도 바닥에 떨어진 열쇠는 움켜쥘 수 있었다."
+      ],
+      choices: [
+        { label: "다음", next: "act3_002_key", conditionNext: [{ if: { statAtLeast: { wound: 3 } }, next: "ending_void_death" }, { next: "act3_002_key" }] }
+      ]
+    },
+    act3_002b_success: {
+      chapter: "3막 조작",
+      location: "최초의 성채",
+      title: "균열을 찌르다",
+      text: [
+        "‘천계의 질서와 심연의 복수는 결국 이 하나의 문을 지키기 위한 핑계다.’ 네 목소리는 흔들림 없이 두 사람의 정곡을 찔렀다. 심문관과 사제는 그 부정할 수 없는 모순 앞에서 잠시 행동을 멈췄다. 의심은 강한 확신이 되어 상대를 얼어붙게 했다."
+      ],
+      choices: [{ label: "다음", next: "act3_002_seal" }]
+    },
+    act3_002b_fail: {
+      chapter: "3막 조작",
+      location: "최초의 성채",
+      title: "주저하는 목소리",
+      text: [
+        "‘너희는... 결국 같은 봉인을...’ 말을 내뱉는 순간 네 안의 오랜 천계 교육이 발목을 잡았다. 이단적인 발언을 스스로도 완전히 믿지 못한 탓에 목소리에 힘이 없었다. 심문관은 헛소리로 치부하며 너에게 강한 타격을 날렸다."
+      ],
+      choices: [{ label: "다음", next: "act3_002_seal" }]
     },
     act3_003: {
       chapter: "3막 조작",
