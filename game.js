@@ -487,16 +487,16 @@
       return;
     }
 
-    // Record this step to history log before resolving next
-    const currentEvent = state.eventId === "game_over" ? GAME_OVER_EVENT : data.events[state.eventId];
-    recordHistory(currentEvent, choice.label);
-
     let checkSuccess = true;
     if (choice.check) {
       const result = await runStatCheck(choice);
       if (result === null) return;
       checkSuccess = result;
     }
+
+    // Record this step to history log before resolving next
+    const currentEvent = state.eventId === "game_over" ? GAME_OVER_EVENT : data.events[state.eventId];
+    recordHistory(currentEvent, choice.label);
 
     if (choice.check) {
       // Resolve conditional path for check
