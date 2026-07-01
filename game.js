@@ -87,75 +87,220 @@
       if (!this.ctx || !this.noiseBuffer) return;
 
       const now = this.ctx.currentTime;
+      const out = this.ctx.destination;
 
-      // 1. High-frequency transient mechanical click (White Noise Bandpass)
+      // 타자기 키의 마른 금속성 타격
       const noise = this.ctx.createBufferSource();
       noise.buffer = this.noiseBuffer;
 
-      const filter = this.ctx.createBiquadFilter();
-      filter.type = "bandpass";
-      // Randomize peak frequency slightly to simulate typing variation
-      filter.frequency.setValueAtTime(1200 + Math.random() * 400, now);
-      filter.Q.setValueAtTime(3.0, now);
+      const band = this.ctx.createBiquadFilter();
+      band.type = "bandpass";
+      band.frequency.setValueAtTime(2600 + Math.random() * 900, now);
+      band.Q.setValueAtTime(5.5 + Math.random() * 2, now);
 
-      const noiseGain = this.ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.012, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
+      const clickGain = this.ctx.createGain();
+      clickGain.gain.setValueAtTime(0.018 + Math.random() * 0.008, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
 
-      noise.connect(filter);
-      filter.connect(noiseGain);
-      noiseGain.connect(this.ctx.destination);
+      noise.connect(band);
+      band.connect(clickGain);
+      clickGain.connect(out);
 
-      // Start at random buffer offset for distinct click profiles
-      const offset = Math.random() * 0.9;
-      noise.start(now, offset, 0.015);
+      noise.start(now, Math.random() * 0.8, 0.02);
 
-      // 2. Low-frequency body resonance (Triangle Wave Thud)
-      const osc = this.ctx.createOscillator();
-      const oscGain = this.ctx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(140 + Math.random() * 60, now);
+      // 키가 바닥을 치는 낮은 몸통 공명
+      const body = this.ctx.createOscillator();
+      const bodyGain = this.ctx.createGain();
 
-      oscGain.gain.setValueAtTime(0.018, now);
-      oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.025);
+      body.type = "triangle";
+      body.frequency.setValueAtTime(115 + Math.random() * 35, now);
 
-      osc.connect(oscGain);
-      oscGain.connect(this.ctx.destination);
+      bodyGain.gain.setValueAtTime(0.012 + Math.random() * 0.006, now);
+      bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
 
-      osc.start(now);
-      osc.stop(now + 0.025);
+      body.connect(bodyGain);
+      bodyGain.connect(out);
+
+      body.start(now);
+      body.stop(now + 0.05);
+
+      // 가끔 활자 막대가 튕기는 듯한 얇은 여운
+      if (Math.random() < 0.18) {
+        const ping = this.ctx.createOscillator();
+        const pingGain = this.ctx.createGain();
+
+        ping.type = "sine";
+        ping.frequency.setValueAtTime(1800 + Math.random() * 700, now + 0.006);
+
+        pingGain.gain.setValueAtTime(0.006, now + 0.006);
+        pingGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+
+        ping.connect(pingGain);
+        pingGain.connect(out);
+
+        ping.start(now + 0.006);
+        ping.stop(now + 0.065);
+      }
     },
     playClick() {
       if (!this.enabled) return;
       this.init();
-      if (!this.ctx) return;
+      if (!this.ctx || !this.noiseBuffer) return;
+
+      const now = this.ctx.currentTime;
+      const out = this.ctx.destination;
+
+      // 낮고 짧은 목재/석재 느낌의 UI 클릭
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(220, this.ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(70, this.ctx.currentTime + 0.15);
-      gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.18);
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(190, now);
+      osc.frequency.exponentialRampToValueAtTime(105, now + 0.075);
+
+      gain.gain.setValueAtTime(0.055, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.18);
+      gain.connect(out);
+
+      osc.start(now);
+      osc.stop(now + 0.095);
+
+      // 아주 짧은 표면 마찰음
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = this.noiseBuffer;
+
+      const high = this.ctx.createBiquadFilter();
+      high.type = "highpass";
+      high.frequency.setValueAtTime(1800, now);
+
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.008, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
+
+      noise.connect(high);
+      high.connect(noiseGain);
+      noiseGain.connect(out);
+
+      noise.start(now, Math.random() * 0.8, 0.018);
     },
     playError() {
       if (!this.enabled) return;
       this.init();
-      if (!this.ctx) return;
+      if (!this.ctx || !this.noiseBuffer) return;
+
+      const now = this.ctx.currentTime;
+      const out = this.ctx.destination;
+
+      // 실패감 있는 낮은 하강음
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(120, this.ctx.currentTime);
-      osc.frequency.linearRampToValueAtTime(100, this.ctx.currentTime + 0.2);
-      gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.22);
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(155, now);
+      osc.frequency.exponentialRampToValueAtTime(72, now + 0.42);
+
+      gain.gain.setValueAtTime(0.075, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.48);
+
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.22);
+      gain.connect(out);
+
+      osc.start(now);
+      osc.stop(now + 0.5);
+
+      // 둔탁한 충격감
+      const thud = this.ctx.createOscillator();
+      const thudGain = this.ctx.createGain();
+
+      thud.type = "sine";
+      thud.frequency.setValueAtTime(58, now + 0.035);
+
+      thudGain.gain.setValueAtTime(0.06, now + 0.035);
+      thudGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.24);
+
+      thud.connect(thudGain);
+      thudGain.connect(out);
+
+      thud.start(now + 0.035);
+      thud.stop(now + 0.26);
+
+      // 거슬리지 않는 어두운 노이즈 잔향
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = this.noiseBuffer;
+
+      const lowpass = this.ctx.createBiquadFilter();
+      lowpass.type = "lowpass";
+      lowpass.frequency.setValueAtTime(520, now);
+
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.025, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+
+      noise.connect(lowpass);
+      lowpass.connect(noiseGain);
+      noiseGain.connect(out);
+
+      noise.start(now, Math.random() * 0.7, 0.28);
+    },
+    playSuccess() {
+      if (!this.enabled) return;
+      this.init();
+      if (!this.ctx || !this.noiseBuffer) return;
+
+      const now = this.ctx.currentTime;
+      const out = this.ctx.destination;
+
+      // 맑고 울림 있는 1도-5도 맑은 Chime 화음
+      const osc1 = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const gain1 = this.ctx.createGain();
+      const gain2 = this.ctx.createGain();
+
+      osc1.type = "sine";
+      osc1.frequency.setValueAtTime(330, now); // E4
+      osc1.frequency.exponentialRampToValueAtTime(396, now + 0.3); // G4
+
+      osc2.type = "triangle";
+      osc2.frequency.setValueAtTime(495, now + 0.05); // B4 (완전 5도)
+
+      gain1.gain.setValueAtTime(0.06, now);
+      gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+
+      gain2.gain.setValueAtTime(0.04, now + 0.05);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+
+      osc1.connect(gain1);
+      gain1.connect(out);
+
+      osc2.connect(gain2);
+      gain2.connect(out);
+
+      osc1.start(now);
+      osc1.stop(now + 0.4);
+
+      osc2.start(now + 0.05);
+      osc2.stop(now + 0.5);
+
+      // 부드러운 고주파 Chime Shimmer
+      const noise = this.ctx.createBufferSource();
+      noise.buffer = this.noiseBuffer;
+
+      const band = this.ctx.createBiquadFilter();
+      band.type = "bandpass";
+      band.frequency.setValueAtTime(3000, now);
+      band.Q.setValueAtTime(4.0, now);
+
+      const noiseGain = this.ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.01, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+
+      noise.connect(band);
+      band.connect(noiseGain);
+      noiseGain.connect(out);
+
+      noise.start(now, Math.random() * 0.8, 0.15);
     }
   };
 
@@ -284,10 +429,21 @@
         return;
       }
 
-      currentParaElement.textContent += fullText[currentCharIndex];
-      AudioEngine.playTyping();
+      const char = fullText[currentCharIndex];
+      currentParaElement.textContent += char;
+
+      if (!/\s/.test(char)) {
+        AudioEngine.playTyping();
+      }
+
       currentCharIndex++;
-      typingTimeout = setTimeout(typeChar, 20); // 20ms typewriter speed
+
+      const pause =
+        /[.!?。！？]/.test(char) ? 180 :
+        /[,，、;]/.test(char) ? 90 :
+        28 + Math.random() * 38;
+
+      typingTimeout = setTimeout(typeChar, pause);
     }
 
     nextLine();
@@ -425,7 +581,7 @@
             checkDice.classList.add("success");
             checkResult.textContent = `성공! (주사위: ${rollValue} <= 확률: ${prob}%)`;
             checkResult.classList.add("success");
-            AudioEngine.playClick();
+            AudioEngine.playSuccess();
           } else {
             checkDice.classList.add("failure");
             checkResult.textContent = `실패 (주사위: ${rollValue} > 확률: ${prob}%)`;
