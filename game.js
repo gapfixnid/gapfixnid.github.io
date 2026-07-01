@@ -150,22 +150,22 @@
       const now = this.ctx.currentTime;
       const out = this.ctx.destination;
 
-      // 낮고 짧은 목재/석재 느낌의 UI 클릭
+      // 산뜻하고 마른 나무/키캡 느낌의 UI 클릭
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
       osc.type = "sine";
-      osc.frequency.setValueAtTime(190, now);
-      osc.frequency.exponentialRampToValueAtTime(105, now + 0.075);
+      osc.frequency.setValueAtTime(320, now);
+      osc.frequency.exponentialRampToValueAtTime(170, now + 0.045);
 
-      gain.gain.setValueAtTime(0.055, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
 
       osc.connect(gain);
       gain.connect(out);
 
       osc.start(now);
-      osc.stop(now + 0.095);
+      osc.stop(now + 0.055);
 
       // 아주 짧은 표면 마찰음
       const noise = this.ctx.createBufferSource();
