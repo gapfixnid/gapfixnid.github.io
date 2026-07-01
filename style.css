@@ -109,8 +109,11 @@ h1 {
 .icon-button {
   width: 42px;
   height: 42px;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 18px;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -493,12 +496,24 @@ h2 {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 14px;
   color: var(--ink);
   transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-button span, .icon-button.mini span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  width: 100%;
+  height: 100%;
 }
 
 .icon-button.mini:hover {
@@ -662,3 +677,228 @@ h2 {
   border-color: rgba(255, 255, 255, 0.05);
   cursor: not-allowed;
 }
+
+/* ==========================================================================
+   🎮 GAMEPLAY STYLING (NEW SYSTEMS)
+   ========================================================================== */
+
+/* 1. Progress Bars for Stats */
+.stat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 110px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  transition: all 0.25s ease;
+}
+
+.stat-container:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-label b {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.stat-container[data-stat="faith"] b { color: var(--gold); }
+.stat-container[data-stat="doubt"] b { color: var(--blue); }
+.stat-container[data-stat="wound"] b { color: var(--red); }
+.stat-container[data-stat="memory"] b { color: var(--green); }
+
+.stat-bar-outer {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.stat-bar-inner {
+  height: 100%;
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.stat-container[data-stat="faith"] .stat-bar-inner { background: var(--gold); box-shadow: 0 0 6px rgba(212, 184, 107, 0.5); }
+.stat-container[data-stat="doubt"] .stat-bar-inner { background: var(--blue); box-shadow: 0 0 6px rgba(125, 159, 188, 0.5); }
+.stat-container[data-stat="wound"] .stat-bar-inner { background: var(--red); box-shadow: 0 0 6px rgba(184, 74, 74, 0.5); }
+.stat-container[data-stat="memory"] .stat-bar-inner { background: var(--green); box-shadow: 0 0 6px rgba(127, 170, 138, 0.5); }
+
+/* 2. History Log Box */
+.log-box {
+  width: min(650px, 100%);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-content {
+  flex: 1;
+  overflow-y: auto;
+  margin: 18px 0;
+  padding-right: 12px;
+  max-height: 50vh;
+  scrollbar-width: thin;
+}
+
+.log-item {
+  margin-bottom: 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 16px;
+}
+
+.log-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.log-meta {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+
+.log-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 8px 0;
+}
+
+.log-text {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--muted);
+  margin: 0 0 10px 0;
+}
+
+.log-text p {
+  margin: 0 0 8px 0;
+}
+
+.log-choice {
+  font-size: 13px;
+  color: var(--gold);
+  background: rgba(212, 184, 107, 0.06);
+  border-left: 3px solid var(--gold);
+  padding: 6px 10px;
+  margin: 8px 0 0 0;
+  border-radius: 0 4px 4px 0;
+}
+
+/* 3. Dice Roll / Check Overlay */
+.check-box {
+  width: min(400px, 100%);
+  text-align: center;
+}
+
+.check-container {
+  margin: 24px 0;
+}
+
+.check-animation {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.check-dice {
+  width: 72px;
+  height: 72px;
+  background: radial-gradient(circle at 30% 30%, #292d38, #11131a);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--gold);
+  box-shadow: 0 0 24px rgba(212, 184, 107, 0.25);
+  transition: all 0.15s ease;
+}
+
+.check-dice.roll {
+  animation: diceShake 0.4s infinite linear;
+}
+
+.check-dice.success {
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: 0 0 24px rgba(127, 170, 138, 0.4);
+}
+
+.check-dice.failure {
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: 0 0 24px rgba(184, 74, 74, 0.4);
+}
+
+#checkDetail {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0 0 10px 0;
+}
+
+.check-result-text {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+  min-height: 27px;
+  letter-spacing: 0.05em;
+}
+
+.check-result-text.success { color: var(--green); text-shadow: 0 0 12px rgba(127,170,138,0.3); }
+.check-result-text.failure { color: var(--red); text-shadow: 0 0 12px rgba(184,74,74,0.3); }
+
+@keyframes diceShake {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.05) rotate(-15deg); }
+  50% { transform: scale(1) rotate(15deg); }
+  75% { transform: scale(1.05) rotate(-10deg); }
+  100% { transform: scale(1) rotate(10deg); }
+}
+
+/* 4. Typewriter Layout */
+.story-text p {
+  position: relative;
+  display: block;
+}
+
+.story-text p.typing::after {
+  content: " ▮";
+  color: var(--gold);
+  animation: cursorBlink 0.8s steps(2, start) infinite;
+}
+
+@keyframes cursorBlink {
+  to { visibility: hidden; }
+}
+
+/* Sound indicator flash */
+#soundToggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+#soundToggle #soundIcon {
+  font-size: 14px;
+}
+
