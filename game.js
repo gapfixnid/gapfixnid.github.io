@@ -123,24 +123,6 @@
 
       body.start(now);
       body.stop(now + 0.05);
-
-      // 가끔 활자 막대가 튕기는 듯한 얇은 여운
-      if (Math.random() < 0.18) {
-        const ping = this.ctx.createOscillator();
-        const pingGain = this.ctx.createGain();
-
-        ping.type = "sine";
-        ping.frequency.setValueAtTime(1800 + Math.random() * 700, now + 0.006);
-
-        pingGain.gain.setValueAtTime(0.006, now + 0.006);
-        pingGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
-
-        ping.connect(pingGain);
-        pingGain.connect(out);
-
-        ping.start(now + 0.006);
-        ping.stop(now + 0.065);
-      }
     },
     playClick() {
       if (!this.enabled) return;
